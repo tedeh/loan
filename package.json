@@ -1,0 +1,45 @@
+{
+  "name": "loan",
+  "version": "1.0.0",
+  "description": "Tool for making calculations on loans",
+  "license": "MIT",
+  "keywords": [
+    "loan",
+    "annuity",
+    "finance",
+    "serial",
+    "interest",
+    "rate",
+    "economy"
+  ],
+  "author": "Tedde Lundgren <mail@tedeh.net> (http://tedeh.net)",
+  "maintainers": "Tedde Lundgren <mail@tedeh.net> (http://tedeh.net)",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tedeh/loan.git"
+  },
+  "homepage": "http://loan.tedeh.net",
+  "bugs": "https://github.com/tedeh/loan/issues",
+  "main": "index",
+  "contributors": [
+    "Tedde Lundgren <mail@tedeh.net> (http://tedeh.net)"
+  ],
+  "config": {
+    "blanket": {
+      "pattern": "lib",
+      "data-cover-never": [
+        "node_modules"
+      ],
+      "data-cover-reporter-options": {
+        "shortnames": false
+      }
+    }
+  },
+  "dependencies": {
+    "lodash": "^4.5.0",
+    "moment": "^2.11.2"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5"
+  }
+}
