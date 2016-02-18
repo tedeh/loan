@@ -1,0 +1,22 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": [
+      "./lib/"
+    ]
+  },
+  "opts": {
+    "destination": "./docs/",
+    "package": "./package.json",
+    "recurse": true
+  },
+  "templates": {
+    "systemName": "Loan",
+    "copyright": "The MIT License",
+    "includeDate": false,
+    "linenums": true,
+    "outputSourceFiles": true
+  }
+}
