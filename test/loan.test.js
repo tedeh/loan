@@ -379,13 +379,35 @@ describe('Loan', function() {
     
     });
 
+    describe('clone', function() {
+
+      beforeEach(function() {
+        loan = new Loan(fixtures.long);
+      });
+
+      it('should return a superficial clone of the loan', function() {
+        var clone = loan.clone();
+        clone.should.containDeep(loan);
+        clone.should.not.equal(loan);
+        clone.should.be.instanceof(Loan);
+      });
+
+      it('should also copy deep objects', function() {
+        loan.data = {description: 'Hello'};
+        var clone = loan.clone();
+        clone.data.should.containDeep(loan.data);
+        loan.data.should.not.equal(clone.data);
+      });
+    
+    });
+
     describe('toJSON', function() {
 
       beforeEach(function() {
         loan = new Loan(fixtures.long);
-      })
+      });
 
-      it('should return a copy of all important fields of the loan', function() {
+      it('should return a clone of all important fields of the loan', function() {
         // change some fields from the expected defaults
         loan.invoice_fee = 1;
         loan.type = 'serial';
@@ -422,10 +444,6 @@ describe('Loan', function() {
       });
     
     });
-  
-  });
-
-  describe('round', function() {
   
   });
 
