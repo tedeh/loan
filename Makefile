@@ -1,7 +1,7 @@
 SHELL:=/bin/bash -O extglob
 
 lint:
-	./node_modules/.bin/jshint -c .jshintrc lib/*.js lib/**/*.js
+	./node_modules/.bin/jshint -c .jshintrc lib/*.js
 
 test:
 	./node_modules/.bin/mocha

@@ -1,0 +1,6 @@
+{
+  "node": true,
+  "laxbreak": true,
+  "unused": "vars",
+  "undef": true
+}
