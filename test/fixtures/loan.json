@@ -1,0 +1,38 @@
+{
+  "short": {
+    "interest_rate": 0.01,
+    "principal": 10000,
+    "instalments": 2,
+    "type": "annuity",
+    "pay_every": "month",
+    "invoice_fee": 25,
+    "initial_fee": 250
+  },
+  "long": {
+    "type": "annuity",
+    "principal": 220000,
+    "interest_rate": 0.0545,
+    "instalments": 120,
+    "pay_every": "month",
+    "invoice_fee": 0,
+    "initial_fee": 495
+  },
+  "rounded": {
+    "principal": 1,
+    "interest_rate": 0.0545,
+    "invoice_fee": 1,
+    "initial_fee": 1,
+    "amortization": 1,
+    "interest": 6,
+    "to_pay": 56
+  },
+  "unrounded": {
+    "principal": 1.0003,
+    "interest_rate": 0.0545,
+    "invoice_fee": 1.05,
+    "initial_fee": 1.05,
+    "amortization": 1.009,
+    "interest": 5.5,
+    "to_pay": 55.5
+  }
+}
