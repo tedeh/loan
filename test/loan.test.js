@@ -31,11 +31,6 @@ describe('Loan', function() {
       loan.should.containDeep(_.omit(loan.getDefaults(), 'as_of'));
     });
 
-    it('should set as_of to the date of today', function() {
-      should(loan.as_of).be.instanceof(Date);
-      moment(loan.as_of).isSame(new Date(), 'day').should.equal(true);
-    });
-
     describe('getPaymentPlan', function() {
 
       beforeEach(function() {
@@ -109,9 +104,8 @@ describe('Loan', function() {
 
     describe('getDateOfInstalment', function() {
 
-      it('should return as_of as set if instalment is not given', function() {
-        loan.as_of = new Date(Date.now() - 1000);
-        loan.getDateOfInstalment().should.eql(loan.as_of);
+      it('should return null if instalment is not given', function() {
+        should(loan.getDateOfInstalment()).equal(null);
       });
 
       it('should return null if as_of and pay_every is not set', function() {
@@ -300,6 +294,25 @@ describe('Loan', function() {
     
     });
 
+    describe('getAsOf', function() {
+
+      it('should return as_of if it is set', function() {
+        var now = moment().startOf('month').toDate();
+        var loan = new Loan({as_of: now});
+        loan.getAsOf().should.equal(now);
+      });
+
+      it('should return the current date to second precision if not set', function(done) {
+        var now = new Date();
+        var loan = new Loan();
+        setTimeout(function() {
+          loan.getAsOf().should.eql(moment(now).startOf('second').toDate());
+          done();
+        }, 50);
+      });
+    
+    });
+
     describe('amortize', function() {
 
       var stableFields = ['interest_rate', 'principal', 'pay_every', 'intial_fee', 'invoice_fee', 'instalments'];
@@ -379,24 +392,28 @@ describe('Loan', function() {
     
     });
 
-    describe('clone', function() {
+    describe('toObject', function() {
 
       beforeEach(function() {
         loan = new Loan(fixtures.long);
       });
 
       it('should return a superficial clone of the loan', function() {
-        var clone = loan.clone();
+        var clone = loan.toObject();
         clone.should.containDeep(loan);
         clone.should.not.equal(loan);
-        clone.should.be.instanceof(Loan);
+        clone.should.not.be.instanceof(Loan);
       });
 
       it('should also copy deep objects', function() {
         loan.data = {description: 'Hello'};
-        var clone = loan.clone();
+        var clone = loan.toObject();
         clone.data.should.containDeep(loan.data);
         loan.data.should.not.equal(clone.data);
+      });
+
+      it('should not copy instance functions', function() {
+        loan.toObject().should.not.have.ownProperty('getEffectiveInterestRate');
       });
     
     });
@@ -407,40 +424,10 @@ describe('Loan', function() {
         loan = new Loan(fixtures.long);
       });
 
-      it('should return a clone of all important fields of the loan', function() {
-        // change some fields from the expected defaults
-        loan.invoice_fee = 1;
-        loan.type = 'serial';
-        loan.pay_every = 'quarter';
-        loan.locked = true;
-        var json = loan.toJSON();
-        _.keys(json).should.containDeep(_.keys(fixtures.long));
-        json.should.containDeep({locked: true});
-      });
-
-      it('should leave out fields that are equal to the default values', function() {
-        var defaults = (new Loan()).getDefaults();
-        (new Loan()).toJSON().should.not.containDeep(defaults);
-      });
-
-      it('should keep all fields if first parameter is true', function() {
-        var defaults = (new Loan()).getDefaults();
-        (new Loan()).toJSON(true).should.containDeep(defaults);
-      });
-
-      it('should create the same loan when given to the constructor', function() {
-        var mloan = new Loan(loan.toJSON());
-        mloan.should.containDeep(loan);
-      });
-
-      it('should keep the data object as is if set', function() {
-        loan.data = {hello: 'asdf', value: 3, interest_rate_effective: 4.3};
-        loan.toJSON().should.have.property('data', loan.data);
-      });
-
-      it('should not keep payment_plan in the data object', function() {
-        loan.data = {payment_plan: []};
-        loan.toJSON().data.should.not.have.property('payment_plan');
+      it('should pass to Format.minimal but not return an instance of Loan', function() {
+        var minimal = Loan.Format.minimal(loan);
+        loan.toJSON().should.containDeep(minimal);
+        loan.toJSON().should.not.be.instanceof(Loan);
       });
     
     });

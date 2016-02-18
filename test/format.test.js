@@ -19,6 +19,7 @@ describe('Format', function() {
       var result = minimal(loan);
       result.should.eql({type: 'serial'});
       result.should.not.equal(loan);
+      result.should.be.instanceof(Loan);
       _.keys(result).should.have.lengthOf(1);
     });
 
