@@ -6,6 +6,34 @@ var fixtures = require(__dirname + '/fixtures/loan.json');
 
 describe('Format', function() {
 
+  describe('minimal', function() {
+
+    var minimal = Format.minimal;
+
+    it('should return null for invalid arguments', function() {
+      should(minimal()).equal(null);
+    });
+
+    it('should clone and exclude keys where the value equals a default value', function() {
+      var loan = new Loan({type: 'serial'});
+      var result = minimal(loan);
+      result.should.eql({type: 'serial'});
+      result.should.not.equal(loan);
+      _.keys(result).should.have.lengthOf(1);
+    });
+
+    it('should return a completely empty loan if given an empty loan', function() {
+      _.keys(minimal(new Loan())).should.have.lengthOf(0);
+    });
+
+    it('should deal with the data object', function() {
+      var loan = new Loan({type: 'serial', data: {description: 'My Loan'}});
+      var result = minimal(loan);
+      result.should.eql({type: 'serial', data: {description: 'My Loan'}});
+    });
+  
+  });
+
   describe('round', function() {
 
     var round = Format.round;
