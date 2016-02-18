@@ -54,8 +54,8 @@ Loan can be installed with [npm](https://github.com/npm/npm) `npm install` in yo
 
 ## Version history
 
-- **0.0.1**
-  *2016-02-18*
+- **v0.0.1**<br />
+  *2016-02-18*<br />
   Initial (beta) release.
 
 ## Usage
