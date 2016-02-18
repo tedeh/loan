@@ -2,5 +2,6 @@
   "node": true,
   "laxbreak": true,
   "unused": "vars",
-  "undef": true
+  "undef": true,
+  "globalstrict": true
 }

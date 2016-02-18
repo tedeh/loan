@@ -1,11 +1,20 @@
 var _ = require('lodash');
 var moment = require('moment');
 var should = require('should');
+var Loan = require(__dirname + '/../lib/loan');
+var fixtures = require(__dirname + '/fixtures/loan.json');
 
 describe('Loan', function() {
 
-  var Loan = require(__dirname + '/../lib/loan');
-  var fixtures = require(__dirname + '/fixtures/loan.json');
+  it('should export utils', function() {
+    Loan.Utils.should.exist;
+    Loan.utils.should.exist;
+  });
+
+  it('should export format', function() {
+    Loan.Format.should.exist;
+    Loan.format.should.exist;
+  });
 
   describe('instance', function() {
 
@@ -42,7 +51,7 @@ describe('Loan', function() {
         loan.instalments = 4;
         var plan = loan.getPaymentPlan();
         plan.should.be.instanceof(Array).and.have.lengthOf(4);
-        Loan.round(plan[0], 0).should.containDeep(_.pick(loan.round(0), 'instalments', 'principal', 'interest_rate', 'initial_fee', 'invoice_fee'));
+        Loan.Format.round((plan[0]), 0).should.containDeep(_.pick(loan.round(0), 'instalments', 'principal', 'interest_rate', 'initial_fee', 'invoice_fee'));
         loan.type = 'serial';
         loan.getPaymentPlan().should.be.instanceof(Array).and.have.lengthOf(4);
       });
@@ -51,7 +60,7 @@ describe('Loan', function() {
         loan = new Loan(fixtures.long);
         var plan = loan.getPaymentPlan();
         plan.should.have.lengthOf(120);
-        var last = Loan.round(_.last(plan), 0);
+        var last = Loan.Format.round(_.last(plan), 0);
         last.should.containDeep({
           interest_rate: loan.interest_rate,
           interest: 11,
@@ -65,7 +74,7 @@ describe('Loan', function() {
         loan = new Loan(_.extend({}, fixtures.long, {type: 'serial'}));
         var plan = loan.getPaymentPlan();
         plan.should.have.lengthOf(120);
-        var last = Loan.round(_.last(plan), 0);
+        var last = Loan.Format.round(_.last(plan), 0);
         last.should.containDeep({
           interest_rate: loan.interest_rate,
           interest: 8,
@@ -83,8 +92,8 @@ describe('Loan', function() {
         var nloan = new Loan(plan[index]);
         var nplan = nloan.getPaymentPlan();
         var omit = ['as_of', 'instalments']; // will vary and can't be compared
-        plan = plan.slice(index).map(function(p) { return Loan.round(_.omit(p, omit), 0) });
-        nplan = nplan.map(function(p) { return Loan.round(_.omit(p, omit), 0); });
+        plan = plan.slice(index).map(function(p) { return Loan.Format.round(_.omit(p, omit), 0) });
+        nplan = nplan.map(function(p) { return Loan.Format.round(_.omit(p, omit), 0); });
         plan.should.containDeepOrdered(nplan);
       });
 
@@ -357,14 +366,14 @@ describe('Loan', function() {
 
     describe('round', function() {
 
-      it('should pass the current object through Loan.round', function() {
+      it('should pass the current object through Loan.Format.round', function() {
         loan = new Loan(fixtures.unrounded);
         loan.round(0).should.containDeep(fixtures.rounded);
       });
 
       it('should return a copy', function() {
         loan = new Loan({invoice_fee: 4.9});
-        var rounded = loan.round(0);
+        var rounded = loan.round(1);
         loan.invoice_fee.should.equal(4.9);
       });
     
@@ -417,36 +426,6 @@ describe('Loan', function() {
   });
 
   describe('round', function() {
-
-    var loan = null;
-
-    beforeEach(function() {
-      loan = new Loan(_.extend({}, fixtures.short, fixtures.unrounded, {data: {
-        monthly_cost: 1000.5,
-        interest_rate_effective: 0.0457777777,
-        total_cost: 10000.9
-      }}));
-    });
-
-    it('should return null if not given a loan', function() {
-      should(Loan.round(2, 0)).equal(null);
-    });
-
-    it('should return the loan as is if not given a precision', function() {
-      Loan.round(loan).should.containDeep(loan.toJSON());
-    });
-
-    it('should round select variables to an arbitrary precision', function() {
-      Loan.round(loan, 0).should.containDeep(fixtures.rounded);
-    });
-
-    it('should round select variables in the data object', function() {
-      Loan.round(loan, 0).data.should.containDeep({
-        monthly_cost: 1001,
-        total_cost: 10001,
-        interest_rate_effective: 0.046
-      });
-    });
   
   });
 
