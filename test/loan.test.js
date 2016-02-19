@@ -431,6 +431,74 @@ describe('Loan', function() {
       });
     
     });
+
+    describe('canCalculateUnknown', function() {
+
+      it('should return false for invalid arguments', function() {
+        loan.canCalculateUnknown('asdf').should.equal(false);
+        loan.canCalculateUnknown().should.equal(false);
+      });
+
+      describe('for instalments', function() {
+
+        it('should return false when instalments is known', function() {
+          loan.instalments = 120;
+          loan.canCalculateUnknown('instalments').should.equal(false);
+        });
+
+        it('should return true when principal, interest_rate and monthly_cost is known', function() {
+          loan.principal = 10000;
+          loan.interest_rate = 0.05;
+          loan.data.monthly_cost = 3000;
+          loan.canCalculateUnknown('instalments').should.equal(true);
+        });
+
+        it('should return false otherwise', function() {
+          loan.principal = 10000;
+          loan.canCalculateUnknown('instalments').should.equal(false);
+          loan.interest_rate = 0.05;
+          loan.canCalculateUnknown('instalments').should.equal(false);
+          delete loan.principal;
+          loan.data.monthly_cost = 3000;
+          loan.canCalculateUnknown('instalments').should.equal(false);
+        });
+
+      });
+    
+    });
+
+    describe('calculateUnknown', function() {
+
+      it('should return an empty object for invalid arguments', function() {
+        loan.calculateUnknown('asdf').should.eql({});
+        loan.calculateUnknown().should.eql({});
+      });
+
+      describe('for instalments', function() {
+
+        beforeEach(function() {
+          loan.principal = 10000;
+          loan.interest_rate = 0.05;
+          loan.data.monthly_cost = 3000;
+        });
+
+        it('should return an empty object when it is not possible to calculate', function() {
+          (new Loan()).calculateUnknown('instalments').should.eql({});
+        });
+
+        it('should successfully calculate the number of instalments', function() {
+          loan.principal = 10000;
+          loan.interest_rate = 0.05;
+          loan.data.monthly_cost = 3000;
+          _.extend(loan, loan.calculateUnknown('instalments'));
+          delete loan.data.monthly_cost;
+          loan.calculateMeta();
+          loan.data.monthly_cost.should.be.approximately(3000, 1);
+        });
+      
+      });
+    
+    });
   
   });
 
