@@ -498,6 +498,13 @@ describe('Loan', function() {
           loan.calculateMeta();
           loan.data.monthly_cost.should.be.approximately(3000, 1);
         });
+
+        it('should return 0 when the inputs cant provide a real value', function() {
+          loan.principal = 10000;
+          loan.interest_rate = 0.05;
+          loan.data.monthly_cost = 0; // will result in NaN for the equation
+          loan.calculateUnknown('instalments').should.have.property('instalments', 0);
+        });
       
       });
     
