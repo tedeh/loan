@@ -1,1 +1,1 @@
-module.exports = require(__dirname + '/lib/loan');
+module.exports = require('./lib/loan');
