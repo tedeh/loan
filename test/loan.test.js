@@ -442,6 +442,9 @@ describe('Loan', function() {
       describe('for instalments', function() {
 
         it('should return false when instalments is known', function() {
+          loan.principal = 10000;
+          loan.interest_rate = 0.05;
+          loan.data.monthly_cost = 3000;
           loan.instalments = 120;
           loan.canCalculateUnknown('instalments').should.equal(false);
         });
