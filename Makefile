@@ -22,6 +22,6 @@ docs_clear:
 docs_refresh: docs_clear docs
 
 docs_deploy:
-	rsync --delete -r docs/loan oceandatorn:~/shared/loan/public_html
+	rsync --delete -r docs/loan/* oceandatorn:~/shared/nginx/domains/loan.tedeh.net
 
 .PHONY: test test-cov lint docs docs_deploy docs_refresh docs_clear
