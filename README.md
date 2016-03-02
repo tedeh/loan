@@ -16,8 +16,8 @@ Loan is a tool for representing and performing calculations on loans in JavaScri
 - [Example](#example)
 - [Installation](#installation)
 - [Version history](#version-history)
-- [Usage](#usage)
 - [Class documentation](#class-documentation)
+- [Usage](#usage)
 - [Contributing](#contributing)
 
 ## Features
@@ -58,15 +58,97 @@ Loan can be installed with [npm](https://github.com/npm/npm) `npm install` in yo
   *2016-02-18*<br />
   Initial (beta) release.
 
-## Usage
-
-Coming soon! Until then, read the source and the tests.
-
 ## Class documentation
 
-*Coming soon!*
+A comprehensive class documentation made with [jsdoc](http://usejsdoc.org/) is available at [loan.tedeh.net](http://loan.tedeh.net) together with this readme.
 
-A comprehensive class documentation made with [jsdoc](http://usejsdoc.org/) is available at [loan.tedeh.net](http://loan.tedeh.net).
+## Usage
+
+This section is a friendly showcase of some of the features a loan object has. For more in-depth information, peruse the source code, [the tests](test/), or the [class documentation][#class-documentation]
+
+### Effective interest rate
+
+### Payment Plan
+
+A payment plan is a list of loans relating to the current instance, where every loan in the list corresponds to a
+
+To return a payment plan for a loan instance,
+
+### Filtering
+
+### Completing unknown values
+
+Sometimes not all values of a given loan are known, and it would be useful to infer the unknowns. Loan has a limited capability (more to come) to do this:
+
+| Value         | Requirements                                             | Description                                                  |
+|---------------|----------------------------------------------------------|--------------------------------------------------------------|
+| `instalments` | 1) `principal` 2) `interest_rate` 3) `data.monthly_cost` | Calculate the number of instalments left for an annuity loan |
+
+Example calculating instalments given some other values:
+
+```javascript
+var Loan = require('loan');
+
+var loan = new Loan({
+  principal: 50000,
+  interst_rate: 0.05,
+  data: {monthly_cost: 3000}
+});
+
+loan.canCalculateUnknown('instalments');
+// returns true
+
+loan.calculateUnknown();
+// returns an object with a single property "instalments" corresponding to the wanted value
+```
+
+### Amortizing
+
+When the `as_of` date on a loan instance is earlier in time than one (1) `pay_every` period, `shouldAmortize` returns true. Running `amortize` when this is the case returns a copy of the current loan with the present value updated. The `as_of` date is also updated to correspond to the start of the current `pay_every` period.
+
+Example amortizing an older loan:
+
+```javascript
+var Loan = require('loan');
+var moment = require('moment');
+
+var loan = new Loan({
+  interest_rate: 0.01,
+  principal: 10000,
+  pay_every: 'month',
+  instalments: 10,
+  type: 'annuity',
+  as_of: moment().subtract(3, 'months').toDate()
+});
+
+loan.shouldAmortize();
+// returns true
+
+loan.amortize();
+// returns a copy of loan but with values following three months of amortization
+```
+
+Example fully amortizing a loan:
+
+```javascript
+var Loan = require('loan');
+var moment = require('moment');
+
+var loan = new Loan({
+  interest_rate: 0.01,
+  principal: 10000,
+  pay_every: 'month',
+  instalments: 2, // only 2 instalments left
+  type: 'annuity',
+  as_of: moment().subtract(5, 'months').toDate()
+});
+
+loan.shouldAmortize();
+// returns true
+
+loan.amortize();
+// returns a copy of loan with a principal equal to zero
+```
 
 ## Contributing
 
