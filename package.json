@@ -24,6 +24,10 @@
   "contributors": [
     "Tedde Lundgren <mail@tedeh.net> (http://tedeh.net)"
   ],
+  "scripts": {
+    "test": "mocha",
+    "test-ci": "mocha --watch"
+  },
   "config": {
     "blanket": {
       "pattern": "lib",
