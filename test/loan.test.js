@@ -221,6 +221,18 @@ describe('Loan', function() {
         var erate = loan.getEffectiveInterestRate();
         erate.should.be.approximately(0.1848, 0.0005);
       });
+
+      it('should return the correct effective rate for the loan in issue #5', function() {
+        loan = new Loan({
+          type: 'annuity',
+          pay_every: 'month',
+          principal: 200000,
+          interest_rate: 0.07,
+          invoice_fee: 100,
+          instalments: 200
+        });
+        loan.getEffectiveInterestRate().should.be.approximately(0.0817, 0.0005);
+      });
     
     });
 
