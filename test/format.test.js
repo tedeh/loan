@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var should = require('should');
-var Loan = require(__dirname + '/../lib/loan');
-var Format = require(__dirname + '/../lib/format');
-var fixtures = require(__dirname + '/fixtures/loan.json');
+var Loan = require('./../lib/loan');
+var Format = require('./../lib/format');
+var fixtures = require('./fixtures/loan.json');
 
 describe('Format', function() {
 

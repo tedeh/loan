@@ -1,5 +1,5 @@
 var should = require('should');
-var Utils = require(__dirname + '/../lib/utils');
+var Utils = require('./../lib/utils');
 
 describe('Utils', function() {
 

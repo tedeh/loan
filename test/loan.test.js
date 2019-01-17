@@ -1,8 +1,8 @@
 var _ = require('lodash');
 var moment = require('moment');
 var should = require('should');
-var Loan = require(__dirname + '/../lib/loan');
-var fixtures = require(__dirname + '/fixtures/loan.json');
+var Loan = require('./../lib/loan');
+var fixtures = require('./fixtures/loan.json');
 
 describe('Loan', function() {
 
